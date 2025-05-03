@@ -48,9 +48,6 @@ python -m momoya.cli sora --query "space exploration" --output-dir my_downloads
 # Limit the number of results
 python -m momoya.cli sora --query "sunset beach" --limit 10
 
-# Skip searching for similar content
-python -m momoya.cli sora --gen-id gen_01jt5veqacf4tsvcwa76kb908m --no-similar
-
 # Skip saving metadata
 python -m momoya.cli sora --gen-id gen_01jt5veqacf4tsvcwa76kb908m --no-metadata
 ```
@@ -81,7 +78,6 @@ async def download_sora_content():
         query=query, 
         save_metadata=True,
         limit=5,  # Limit to 5 results
-        search_similar=True  # Include similar content
     )
     print(f"Downloaded {downloaded} items using text query")
 
