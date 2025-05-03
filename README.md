@@ -4,14 +4,13 @@ A Python package for extracting AI-generated images and videos from various plat
 
 ## Features
 
-- Extract AI-generated content
-- Download images and videos with associated metadata
+- Extract AI-generated images and videos with associated metadata
 - Command-line interface for easy usage
 - Multiple search methods: by content ID or by text query
 
 ## Currently Supported Platforms
 
-- **Sora AI**: Extracts images and metadata using gen_id or text query
+- **Sora AI**: Extracts images/videos and metadata using gen_id or text query
 
 ## Installation
 
