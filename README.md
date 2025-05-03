@@ -4,10 +4,8 @@ A Python package for extracting AI-generated images and videos from various plat
 
 ## Features
 
-- Extract AI-generated content from different platforms
+- Extract AI-generated content
 - Download images and videos with associated metadata
-- Concurrent downloads using asynchronous I/O
-- Clean architecture for easy extensibility
 - Command-line interface for easy usage
 - Multiple search methods: by content ID or by text query
 
@@ -95,7 +93,7 @@ The package is designed to be easily extensible with new extractors for differen
 
 ## Authentication
 
-Most AI platforms require authentication to access their platformes (Bearer token)
+Most AI platforms require authentication to access their platforms (Bearer token)
 
 ## License
 
