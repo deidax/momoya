@@ -10,6 +10,8 @@ setup(
     install_requires=[
         "aiohttp>=3.8.0",
         "aiofiles>=0.8.0",
+        "pyfiglet>=0.8.0",
+        "termcolor>=1.1.0",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

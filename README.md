@@ -9,10 +9,11 @@ A Python package for extracting AI-generated images and videos from various plat
 - Concurrent downloads using asynchronous I/O
 - Clean architecture for easy extensibility
 - Command-line interface for easy usage
+- Multiple search methods: by content ID or by text query
 
 ## Currently Supported Platforms
 
-- **Sora AI**: Extracts images and metadata using gen_id
+- **Sora AI**: Extracts images and metadata using gen_id or text query
 
 ## Installation
 
@@ -35,14 +36,23 @@ The package provides a command-line interface for easy usage:
 # Set your authentication token (recommended)
 export MOMOYA_SORA_AUTH_TOKEN="your_auth_token_here"
 
-# Extract content from Sora
-python -m momoya.cli sora gen_01jt5veqacf4tsvcwa76kb908m
+# Extract content from Sora using generation ID
+python -m momoya.cli sora --gen-id gen_01jt5veqacf4tsvcwa76kb908m
+
+# Search for content using a text query
+python -m momoya.cli sora --query "selfie with a dog"
 
 # Save to a specific directory
-python -m momoya.cli sora gen_01jt5veqacf4tsvcwa76kb908m --output-dir my_downloads
+python -m momoya.cli sora --query "space exploration" --output-dir my_downloads
+
+# Limit the number of results
+python -m momoya.cli sora --query "sunset beach" --limit 10
+
+# Skip searching for similar content
+python -m momoya.cli sora --gen-id gen_01jt5veqacf4tsvcwa76kb908m --no-similar
 
 # Skip saving metadata
-python -m momoya.cli sora gen_01jt5veqacf4tsvcwa76kb908m --no-metadata
+python -m momoya.cli sora --gen-id gen_01jt5veqacf4tsvcwa76kb908m --no-metadata
 ```
 
 ### Python API
@@ -60,11 +70,20 @@ async def download_sora_content():
         download_dir="downloads"
     )
     
-    # Download content
+    # Example 1: Download content by generation ID
     gen_id = "gen_01jt5veqacf4tsvcwa76kb908m"
-    downloaded = await extractor.run(gen_id, save_metadata=True)
+    downloaded = await extractor.run(content_id=gen_id, save_metadata=True)
+    print(f"Downloaded {downloaded} items using generation ID")
     
-    print(f"Downloaded {downloaded} items")
+    # Example 2: Search and download content by text query
+    query = "abstract art in vibrant colors"
+    downloaded = await extractor.run(
+        query=query, 
+        save_metadata=True,
+        limit=5,  # Limit to 5 results
+        search_similar=True  # Include similar content
+    )
+    print(f"Downloaded {downloaded} items using text query")
 
 # Run the async function
 asyncio.run(download_sora_content())

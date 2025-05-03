@@ -7,29 +7,58 @@ import sys
 import argparse
 import asyncio
 from typing import List, Dict, Any, Optional
+import pyfiglet
+from termcolor import colored
 
 from momoya.extractors.sora_extractor import SoraExtractor
 # Import other extractors as they are added
 
 
-async def extract_sora_content(gen_id: str, auth_token: str, download_dir: str, save_metadata: bool) -> int:
+def print_banner():
+    """Display a stylish Momoya banner."""
+    banner = pyfiglet.figlet_format("Momoya", font="slant")
+    colored_banner = colored(banner, "cyan")
+    print(colored_banner)
+    print(colored("https://github.com/deidax", "yellow"))
+    print(colored("=" * 50, "green"))
+    print()
+
+
+async def extract_sora_content(content_id: Optional[str] = None, 
+                             query: Optional[str] = None,
+                             auth_token: str = None, 
+                             download_dir: str = "downloads", 
+                             save_metadata: bool = True,
+                             search_similar: bool = True,
+                             limit: Optional[int] = None) -> int:
     """Extract Sora AI-generated content using the Sora extractor.
     
     Args:
-        gen_id: The generation ID to extract
+        content_id: The generation ID to extract (optional)
+        query: Text query to search for content (optional)
         auth_token: Authentication token for the API
         download_dir: Directory to save downloads
         save_metadata: Whether to save metadata
+        search_similar: Whether to include similar content in results
+        limit: Maximum number of results to return
     
     Returns:
         Number of downloaded items
     """
     extractor = SoraExtractor(auth_token=auth_token, download_dir=download_dir)
-    return await extractor.run(gen_id, save_metadata=save_metadata)
+    return await extractor.run(
+        content_id=content_id,
+        query=query,
+        save_metadata=save_metadata,
+        search_similar=search_similar,
+        limit=limit
+    )
 
 
 async def main():
     """Main entry point for the CLI."""
+    print_banner()
+    
     parser = argparse.ArgumentParser(description="Momoya - AI-generated content extractor")
     
     # Platform subparsers
@@ -37,9 +66,13 @@ async def main():
     
     # Sora extractor arguments
     sora_parser = subparsers.add_parser("sora", help="Extract content from Sora AI")
-    sora_parser.add_argument("gen_id", help="Generation ID to extract")
+    sora_group = sora_parser.add_mutually_exclusive_group(required=True)
+    sora_group.add_argument("--gen-id", help="Generation ID to extract")
+    sora_group.add_argument("--query", help="Text query to search for content")
     sora_parser.add_argument("--auth-token", help="Authentication token for Sora API")
     sora_parser.add_argument("--no-metadata", action="store_true", help="Don't save metadata")
+    sora_parser.add_argument("--no-similar", action="store_true", help="Don't fetch similar content")
+    sora_parser.add_argument("--limit", type=int, help="Maximum number of results to download")
     sora_parser.add_argument("--output-dir", default="downloads", help="Directory to save downloads")
     
     # Add parsers for other platforms here
@@ -72,10 +105,13 @@ async def main():
         
         # Run the extractor
         downloaded = await extract_sora_content(
-            args.gen_id,
-            auth_token,
-            args.output_dir,
-            not args.no_metadata
+            content_id=args.gen_id,
+            query=args.query,
+            auth_token=auth_token,
+            download_dir=args.output_dir,
+            save_metadata=not args.no_metadata,
+            search_similar=not args.no_similar,
+            limit=args.limit
         )
         
         print(f"\nTotal downloaded: {downloaded} files")

@@ -9,15 +9,20 @@ class BaseExtractor(ABC):
     """Base class that all AI content extractors must implement."""
     
     @abstractmethod
-    async def fetch_content_data(self, content_id: str, **kwargs) -> Union[Dict[str, Any], List[Dict[str, Any]], None]:
-        """Fetch data about AI-generated content using its ID.
+    async def fetch_content_data(self, content_id: Optional[str] = None, query: Optional[str] = None, **kwargs) -> Union[Dict[str, Any], List[Dict[str, Any]], None]:
+        """Fetch data about AI-generated content using different search methods.
         
         Args:
-            content_id: The unique identifier for the content
+            content_id: The unique identifier for the content (optional)
+            query: Text query to search for content (optional)
             **kwargs: Additional parameters specific to the extractor
             
         Returns:
             Data about the requested content or None if not found
+            
+        Note:
+            Either content_id or query should be provided. Implementation details
+            may vary depending on the specific AI platform.
         """
         pass
     
@@ -61,11 +66,12 @@ class BaseExtractor(ABC):
         pass
     
     @abstractmethod
-    async def run(self, content_id: str, **kwargs) -> int:
+    async def run(self, content_id: Optional[str] = None, query: Optional[str] = None, **kwargs) -> int:
         """Run the extractor to fetch and download content.
         
         Args:
-            content_id: The ID of the content to extract
+            content_id: The ID of the content to extract (optional)
+            query: Text query to search for content (optional)
             **kwargs: Additional parameters specific to the extractor
             
         Returns:
