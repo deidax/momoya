@@ -99,11 +99,7 @@ The package is designed to be easily extensible with new extractors for differen
 
 ## Authentication
 
-Most AI platforms require authentication to access their APIs. For security, you should avoid hardcoding authentication tokens in your code. Instead, you can:
-
-1. Pass the token as an argument to the extractor
-2. Set it as an environment variable
-3. Use a secure credentials manager
+Most AI platforms require authentication to access their platformes (Bearer token)
 
 ## License
 
